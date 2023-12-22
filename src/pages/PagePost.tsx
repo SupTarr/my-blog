@@ -12,7 +12,7 @@ const PagePost = ({ posts, handleDelete }: PropsType) => {
   const post = posts.find((post) => post.id.toString() === id);
 
   return (
-    <main className="lg:7/12 mx-auto flex w-full flex-col flex-wrap gap-5 p-2 md:w-9/12">
+    <main className="mx-auto flex w-full flex-col flex-wrap gap-5 p-2 md:w-9/12 lg:w-7/12">
       {post ? (
         <>
           <h1 className="mb-2 text-2xl font-semibold">{post.title}</h1>
