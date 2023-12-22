@@ -10,7 +10,7 @@ const PageHome = ({ posts }: PropsType) => {
   return (
     <main className="lg:7/12 mx-auto flex w-full flex-col flex-wrap gap-5 p-2 md:w-9/12">
       {posts.length ? (
-        <div className="md:grid-cols-2 grid gap-4">
+        <div className="grid gap-4 md:grid-cols-2">
           {posts.map((post) => (
             <Post post={post} />
           ))}

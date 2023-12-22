@@ -7,7 +7,7 @@ type PropsType = {
 
 const Post = ({ post }: PropsType) => {
   return (
-    <div className="card w-72 md:w-full bg-neutral shadow-xl">
+    <div className="card w-72 bg-neutral shadow-xl md:w-full">
       <div className="card-body">
         <Link to={`/post/${post.id}`}>
           <h2 className="card-title">{post.title}</h2>
