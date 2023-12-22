@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Menu from "./Menu";
 
 type PropsType = {
@@ -7,12 +8,14 @@ type PropsType = {
 
 const Header = ({ search, setSearch }: PropsType) => {
   return (
-    <div className="navbar sticky top-0 justify-between bg-base-300">
+    <div className="navbar sticky top-0 z-10 justify-between bg-base-300">
       <div className="navbar-start w-auto md:w-[50%]">
         <Menu />
       </div>
       <div className="navbar-center">
-        <a className="btn btn-ghost text-xl">My Blog</a>
+        <Link to="/" className="btn btn-ghost text-xl">
+          My Blog
+        </Link>
       </div>
       <div className="navbar-end">
         <div className="form-control">
