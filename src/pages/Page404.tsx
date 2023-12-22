@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const Page404 = () => {
   return (
-    <div className="hero min-h-screen bg-base-200">
+    <div className="hero min-h-[calc(100vh-120px)] bg-base-200">
       <div className="hero-content text-center">
         <div className="max-w-md">
           <h1 className="mb-4 text-5xl font-bold">404</h1>

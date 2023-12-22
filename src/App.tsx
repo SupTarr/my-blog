@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
+import { format } from "date-fns";
 import { Post } from "./types/Post";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -40,6 +41,32 @@ function App() {
   ]);
   const [search, setSearch] = useState<string>("");
   const [searchResults, setSearchResults] = useState<Post[]>([]);
+  const [postTitle, setPostTitle] = useState<string>("");
+  const [postBody, setPostBody] = useState<string>("");
+
+  useEffect(() => {
+    const filteredResults = posts.filter(
+      (post) =>
+        post.title.toLowerCase().includes(search.toLowerCase()) ||
+        post.body.toLowerCase().includes(search.toLowerCase()),
+    );
+    setSearchResults(filteredResults.reverse());
+  }, [posts, search]);
+
+  const handleSubmit = () => {
+    const id = posts.length ? posts[posts.length - 1].id + 1 : 1;
+    const datetime = format(new Date(), "MMMM dd, yyyy pp");
+    const newPost: Post = {
+      id,
+      datetime,
+      title: postTitle,
+      body: postBody,
+    };
+    setPosts((posts) => [...posts, newPost]);
+    setPostTitle("");
+    setPostBody("");
+    navigate("/");
+  };
 
   const handleDelete = (id: number) => {
     const postsList = posts.filter((post) => post.id != id);
@@ -51,8 +78,19 @@ function App() {
     <main className="app min-h-screen">
       <Header search={search} setSearch={setSearch} />
       <Routes>
-        <Route path="/" element={<PageHome posts={posts} />} />
-        <Route path="/post" element={<PageNewPost />} />
+        <Route path="/" element={<PageHome posts={searchResults} />} />
+        <Route
+          path="/post"
+          element={
+            <PageNewPost
+              postTitle={postTitle}
+              postBody={postBody}
+              setPostTitle={setPostTitle}
+              setPostBody={setPostBody}
+              handleSubmit={handleSubmit}
+            />
+          }
+        />
         <Route
           path="/post/:id"
           element={<PagePost posts={posts} handleDelete={handleDelete} />}
