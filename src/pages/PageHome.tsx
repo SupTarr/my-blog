@@ -8,9 +8,13 @@ type PropsType = {
 
 const PageHome = ({ posts }: PropsType) => {
   return (
-    <main className="mx-auto flex w-full max-w-screen-lg flex-col flex-wrap content-center gap-5 p-2">
+    <main className="lg:7/12 mx-auto flex w-full flex-col flex-wrap gap-5 p-2 md:w-9/12">
       {posts.length ? (
-        posts.map((post) => <Post post={post} />)
+        <div className="md:grid-cols-2 grid gap-4">
+          {posts.map((post) => (
+            <Post post={post} />
+          ))}
+        </div>
       ) : (
         <Alert type={AlertType.Info} message={"No posts to display."} />
       )}

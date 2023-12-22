@@ -94,7 +94,7 @@ function App() {
             }
           />
           <Route
-            path="/:id"
+            path=":id"
             element={<PagePost posts={posts} handleDelete={handleDelete} />}
           />
         </Route>
