@@ -8,7 +8,7 @@ type PropsType = {
 
 const PageHome = ({ posts }: PropsType) => {
   return (
-    <main className="flex flex-col flex-wrap content-center gap-5 p-2">
+    <main className="flex flex-col flex-wrap content-center gap-5 p-2 w-full max-w-screen-lg mx-auto">
       {posts.length ? (
         posts.map((post) => <Post post={post} />)
       ) : (

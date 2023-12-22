@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { Post } from "./types/Post";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -10,6 +10,8 @@ import PageAbout from "./pages/PageAbout";
 import Page404 from "./pages/Page404";
 
 function App() {
+  const navigate = useNavigate();
+
   const [posts, setPosts] = useState<Post[]>([
     {
       id: 1,
@@ -39,13 +41,22 @@ function App() {
   const [search, setSearch] = useState<string>("");
   const [searchResults, setSearchResults] = useState<Post[]>([]);
 
+  const handleDelete = (id: number) => {
+    const postsList = posts.filter((post) => post.id != id);
+    setPosts(postsList);
+    navigate("/");
+  };
+
   return (
     <main className="app min-h-screen">
       <Header search={search} setSearch={setSearch} />
       <Routes>
         <Route path="/" element={<PageHome posts={posts} />} />
         <Route path="/post" element={<PageNewPost />} />
-        <Route path="/post/:id" element={<PagePost />} />
+        <Route
+          path="/post/:id"
+          element={<PagePost posts={posts} handleDelete={handleDelete} />}
+        />
         <Route path="/about" element={<PageAbout />} />
         <Route path="*" Component={Page404} />
       </Routes>
