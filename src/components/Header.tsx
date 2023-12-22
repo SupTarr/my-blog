@@ -1,6 +1,11 @@
 import Menu from "./Menu";
 
-const Header = () => {
+type PropsType = {
+  search: string;
+  setSearch(newSearch: string): void;
+};
+
+const Header = ({ search, setSearch }: PropsType) => {
   return (
     <div className="navbar sticky top-0 justify-between bg-base-300">
       <div className="navbar-start w-auto md:w-[50%]">
@@ -15,6 +20,8 @@ const Header = () => {
             type="text"
             placeholder="Search"
             className="input input-bordered w-36 md:w-auto"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
         </div>
       </div>

@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Menu = () => {
   return (
     <>
@@ -23,25 +25,25 @@ const Menu = () => {
           className="menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
         >
           <li>
-            <a>Home</a>
+            <Link to="/">Home</Link>
           </li>
           <li>
-            <a>Post</a>
+            <Link to="/post">Post</Link>
           </li>
           <li>
-            <a>About</a>
+            <Link to="/about">About</Link>
           </li>
         </ul>
       </div>
       <ul tabIndex={0} className="menu menu-horizontal hidden px-1 md:flex">
         <li>
-          <a>Home</a>
+          <Link to="/">Home</Link>
         </li>
         <li>
-          <a>Post</a>
+          <Link to="/post">Post</Link>
         </li>
         <li>
-          <a>About</a>
+          <Link to="/about">About</Link>
         </li>
       </ul>
     </>
