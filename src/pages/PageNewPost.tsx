@@ -15,7 +15,7 @@ const PageNewPost = ({
 }: PropsType) => {
   return (
     <main className="mx-auto flex w-full flex-col flex-wrap gap-5 p-2 md:w-9/12 lg:w-7/12">
-      <h1 className="mb-2 w-72 text-2xl font-semibold md:min-w-96">New Post</h1>
+      <h1 className="mb-2 text-2xl font-semibold">New Post</h1>
       <form
         onSubmit={(e) => {
           e.preventDefault();
