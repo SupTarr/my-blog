@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { Post } from "./types/Post";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import Layout from "./components/Layout";
 import PageHome from "./pages/PageHome";
 import PageNewPost from "./pages/PageNewPost";
 import PagePost from "./pages/PagePost";
@@ -75,31 +74,34 @@ function App() {
   };
 
   return (
-    <main className="app min-h-screen">
-      <Header search={search} setSearch={setSearch} />
-      <Routes>
-        <Route path="/" element={<PageHome posts={searchResults} />} />
-        <Route
-          path="/post"
-          element={
-            <PageNewPost
-              postTitle={postTitle}
-              postBody={postBody}
-              setPostTitle={setPostTitle}
-              setPostBody={setPostBody}
-              handleSubmit={handleSubmit}
-            />
-          }
-        />
-        <Route
-          path="/post/:id"
-          element={<PagePost posts={posts} handleDelete={handleDelete} />}
-        />
+    <Routes>
+      <Route
+        path="/"
+        element={<Layout search={search} setSearch={setSearch} />}
+      >
+        <Route index element={<PageHome posts={searchResults} />} />
+        <Route path="/post">
+          <Route
+            index
+            element={
+              <PageNewPost
+                postTitle={postTitle}
+                postBody={postBody}
+                setPostTitle={setPostTitle}
+                setPostBody={setPostBody}
+                handleSubmit={handleSubmit}
+              />
+            }
+          />
+          <Route
+            path="/:id"
+            element={<PagePost posts={posts} handleDelete={handleDelete} />}
+          />
+        </Route>
         <Route path="/about" element={<PageAbout />} />
         <Route path="*" Component={Page404} />
-      </Routes>
-      <Footer />
-    </main>
+      </Route>
+    </Routes>
   );
 }
 
