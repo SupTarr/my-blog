@@ -12,14 +12,14 @@ const PagePost = ({ posts, handleDelete }: PropsType) => {
   const post = posts.find((post) => post.id.toString() === id);
 
   return (
-    <main className="mx-auto w-full max-w-screen-lg p-2">
+    <main className="mx-auto flex w-full max-w-screen-lg flex-col flex-wrap content-center gap-5 p-2">
       {post ? (
         <>
           <h1 className="mb-2 text-2xl font-semibold">{post.title}</h1>
           <p className="mb-5 text-xs">{post.datetime}</p>
           <p className="mb-5">{post.body}</p>
           <button
-            className="btn btn-error"
+            className="btn btn-error max-w-36"
             onClick={() => handleDelete(post.id)}
           >
             Delete Post
