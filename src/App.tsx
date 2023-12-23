@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Routes, Route, useNavigate, useParams } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { Post } from "./types/Post";
 import Api from "./api/posts";
@@ -52,13 +52,11 @@ function App() {
       const response = await (id
         ? Api.put(`/posts/${id}`, newPost)
         : Api.post("/posts", newPost));
-      if (!id) {
-        setPosts((posts) => [...posts, response.data]);
-      } else {
-        setPosts((posts) =>
-          posts.map((post) => (post.id === id ? newPost : post)),
-        );
-      }
+      setPosts((posts) =>
+        id
+          ? posts.map((post) => (post.id === id ? newPost : post))
+          : [...posts, response.data],
+      );
       setPostTitle("");
       setPostBody("");
       navigate("/");
