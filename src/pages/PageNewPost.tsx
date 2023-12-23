@@ -18,9 +18,10 @@ const PageNewPost = ({
   handleSubmit,
 }: PropsType) => {
   const [searchParams, _] = useSearchParams();
+  const id = searchParams.get("id") ? Number(searchParams.get("id")) : 0;
 
   useEffect(() => {
-    searchParams.get("id")
+    id
       ? (async () => {
           try {
             const response = await Api.get(`/posts/${searchParams.get("id")}`);
@@ -39,14 +40,12 @@ const PageNewPost = ({
   return (
     <main className="mx-auto flex w-full flex-col flex-wrap gap-5 p-2 md:w-9/12 lg:w-7/12">
       <h1 className="mb-2 text-2xl font-semibold">
-        {searchParams.get("id") ? "Edit Post" : "New Post"}
+        {id ? "Edit Post" : "New Post"}
       </h1>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          searchParams.get("id")
-            ? handleSubmit(Number(searchParams.get("id")))
-            : handleSubmit();
+          id ? handleSubmit(id) : handleSubmit();
         }}
       >
         <label className="form-control">
