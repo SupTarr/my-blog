@@ -20,20 +20,20 @@ const PageNewPost = ({
   const [searchParams, _] = useSearchParams();
 
   useEffect(() => {
-    if (searchParams.get("id")) {
-      (async () => {
-        try {
-          const response = await Api.get(`/posts/${searchParams.get("id")}`);
-          setPostTitle(response.data.title);
-          setPostBody(response.data.body);
-        } catch (err) {
-          console.log(`>> error: ${(err as Error).message}`);
-        }
-      })();
-    } else {
-      setPostTitle("");
-      setPostBody("");
-    }
+    searchParams.get("id")
+      ? (async () => {
+          try {
+            const response = await Api.get(`/posts/${searchParams.get("id")}`);
+            setPostTitle(response.data.title);
+            setPostBody(response.data.body);
+          } catch (err) {
+            console.log(`>> error: ${(err as Error).message}`);
+          }
+        })()
+      : (() => {
+          setPostTitle("");
+          setPostBody("");
+        })();
   }, []);
 
   return (
@@ -42,11 +42,9 @@ const PageNewPost = ({
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (searchParams.get("id")) {
-            handleSubmit(Number(searchParams.get("id")));
-          } else {
-            handleSubmit();
-          }
+          searchParams.get("id")
+            ? handleSubmit(Number(searchParams.get("id")))
+            : handleSubmit();
         }}
       >
         <label className="form-control">
