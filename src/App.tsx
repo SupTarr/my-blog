@@ -54,7 +54,7 @@ function App() {
         : Api.post("/posts", newPost));
       setPosts((posts) =>
         id
-          ? posts.map((post) => (post.id === id ? newPost : post))
+          ? posts.map((post) => (post.id === id ? { ...response.data } : post))
           : [...posts, response.data],
       );
       setPostTitle("");

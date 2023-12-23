@@ -38,7 +38,9 @@ const PageNewPost = ({
 
   return (
     <main className="mx-auto flex w-full flex-col flex-wrap gap-5 p-2 md:w-9/12 lg:w-7/12">
-      <h1 className="mb-2 text-2xl font-semibold">New Post</h1>
+      <h1 className="mb-2 text-2xl font-semibold">
+        {searchParams.get("id") ? "Edit Post" : "New Post"}
+      </h1>
       <form
         onSubmit={(e) => {
           e.preventDefault();
