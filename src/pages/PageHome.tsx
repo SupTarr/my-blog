@@ -12,7 +12,7 @@ const PageHome = ({ posts }: PropsType) => {
       {posts.length ? (
         <div className="grid gap-4 md:grid-cols-2">
           {posts.map((post) => (
-            <Post post={post} />
+            <Post key={`post-${post.id}`} post={post} />
           ))}
         </div>
       ) : (
