@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { Post } from "./types/Post";
+import Api from "./api/posts";
 import Layout from "./components/Layout";
 import PageHome from "./pages/PageHome";
 import PageNewPost from "./pages/PageNewPost";
@@ -12,36 +13,22 @@ import Page404 from "./pages/Page404";
 function App() {
   const navigate = useNavigate();
 
-  const [posts, setPosts] = useState<Post[]>([
-    {
-      id: 1,
-      title: "My First Post",
-      datetime: "July 01, 2021 11:17:36 AM",
-      body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis consequatur expedita, assumenda similique non optio! Modi nesciunt excepturi corrupti atque blanditiis quo nobis, non optio quae possimus illum exercitationem ipsa!",
-    },
-    {
-      id: 2,
-      title: "My 2nd Post",
-      datetime: "July 01, 2021 11:17:36 AM",
-      body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis consequatur expedita, assumenda similique non optio! Modi nesciunt excepturi corrupti atque blanditiis quo nobis, non optio quae possimus illum exercitationem ipsa!",
-    },
-    {
-      id: 3,
-      title: "My 3rd Post",
-      datetime: "July 01, 2021 11:17:36 AM",
-      body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis consequatur expedita, assumenda similique non optio! Modi nesciunt excepturi corrupti atque blanditiis quo nobis, non optio quae possimus illum exercitationem ipsa!",
-    },
-    {
-      id: 4,
-      title: "My Fourth Post",
-      datetime: "July 01, 2021 11:17:36 AM",
-      body: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis consequatur expedita, assumenda similique non optio! Modi nesciunt excepturi corrupti atque blanditiis quo nobis, non optio quae possimus illum exercitationem ipsa!",
-    },
-  ]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [search, setSearch] = useState<string>("");
   const [searchResults, setSearchResults] = useState<Post[]>([]);
   const [postTitle, setPostTitle] = useState<string>("");
   const [postBody, setPostBody] = useState<string>("");
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await Api.get("/posts");
+        setPosts(response.data);
+      } catch (err) {
+        console.log(`>> error: ${(err as Error).message}`);
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     const filteredResults = posts.filter(
@@ -52,25 +39,42 @@ function App() {
     setSearchResults(filteredResults.reverse());
   }, [posts, search]);
 
-  const handleSubmit = () => {
-    const id = posts.length ? posts[posts.length - 1].id + 1 : 1;
+  const handleSubmit = async (id: number = 0) => {
+    const newId = posts.length ? posts[posts.length - 1].id + 1 : 1;
     const datetime = format(new Date(), "MMMM dd, yyyy pp");
     const newPost: Post = {
-      id,
+      id: id ? id : newId,
       datetime,
       title: postTitle,
       body: postBody,
     };
-    setPosts((posts) => [...posts, newPost]);
-    setPostTitle("");
-    setPostBody("");
-    navigate("/");
+    try {
+      const response = await (id
+        ? Api.put(`/posts/${id}`, newPost)
+        : Api.post("/posts", newPost));
+      if (!id) {
+        setPosts((posts) => [...posts, response.data]);
+      } else {
+        setPosts((posts) =>
+          posts.map((post) => (post.id === id ? newPost : post)),
+        );
+      }
+      setPostTitle("");
+      setPostBody("");
+      navigate("/");
+    } catch (err) {
+      console.log(`>> error: ${(err as Error).message}`);
+    }
   };
 
-  const handleDelete = (id: number) => {
-    const postsList = posts.filter((post) => post.id != id);
-    setPosts(postsList);
-    navigate("/");
+  const handleDelete = async (id: number) => {
+    try {
+      await Api.delete(`/posts/${id}`);
+      setPosts((posts) => posts.filter((post) => post.id != id));
+      navigate("/");
+    } catch (err) {
+      console.log(`>> error: ${(err as Error).message}`);
+    }
   };
 
   return (

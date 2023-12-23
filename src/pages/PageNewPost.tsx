@@ -1,9 +1,13 @@
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import Api from "../api/posts";
+
 type PropsType = {
   postTitle: string;
   postBody: string;
   setPostTitle(postTitle: string): void;
   setPostBody(postBody: string): void;
-  handleSubmit(): void;
+  handleSubmit(id?: number): void;
 };
 
 const PageNewPost = ({
@@ -13,13 +17,36 @@ const PageNewPost = ({
   setPostBody,
   handleSubmit,
 }: PropsType) => {
+  const [searchParams, _] = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("id")) {
+      (async () => {
+        try {
+          const response = await Api.get(`/posts/${searchParams.get("id")}`);
+          setPostTitle(response.data.title);
+          setPostBody(response.data.body);
+        } catch (err) {
+          console.log(`>> error: ${(err as Error).message}`);
+        }
+      })();
+    } else {
+      setPostTitle("");
+      setPostBody("");
+    }
+  }, []);
+
   return (
     <main className="mx-auto flex w-full flex-col flex-wrap gap-5 p-2 md:w-9/12 lg:w-7/12">
       <h1 className="mb-2 text-2xl font-semibold">New Post</h1>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          handleSubmit();
+          if (searchParams.get("id")) {
+            handleSubmit(Number(searchParams.get("id")));
+          } else {
+            handleSubmit();
+          }
         }}
       >
         <label className="form-control">

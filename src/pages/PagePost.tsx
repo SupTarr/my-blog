@@ -1,5 +1,5 @@
 import { Post } from "../types/Post";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { Alert, AlertType } from "../components/Alert";
 
 type PropsType = {
@@ -9,6 +9,7 @@ type PropsType = {
 
 const PagePost = ({ posts, handleDelete }: PropsType) => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const post = posts.find((post) => post.id.toString() === id);
 
   return (
@@ -18,6 +19,12 @@ const PagePost = ({ posts, handleDelete }: PropsType) => {
           <h1 className="mb-2 text-2xl font-semibold">{post.title}</h1>
           <p className="mb-5 text-xs">{post.datetime}</p>
           <p className="mb-5">{post.body}</p>
+          <button
+            className="btn btn-accent max-w-36"
+            onClick={() => navigate(`/post?id=${id}`)}
+          >
+            Edit Post
+          </button>
           <button
             className="btn btn-error max-w-36"
             onClick={() => handleDelete(post.id)}
