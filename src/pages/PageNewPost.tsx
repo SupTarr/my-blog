@@ -1,22 +1,12 @@
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Api from "../api/posts";
+import { useContext } from "react";
+import DataContext from "../context/DataContext";
 
-type PropsType = {
-  postTitle: string;
-  postBody: string;
-  setPostTitle(postTitle: string): void;
-  setPostBody(postBody: string): void;
-  handleSubmit(id?: number): void;
-};
-
-const PageNewPost = ({
-  postTitle,
-  postBody,
-  setPostTitle,
-  setPostBody,
-  handleSubmit,
-}: PropsType) => {
+const PageNewPost = () => {
+  const { postTitle, postBody, setPostTitle, setPostBody, handleSubmit } =
+    useContext(DataContext);
   const [searchParams, _] = useSearchParams();
   const id = searchParams.get("id") ? Number(searchParams.get("id")) : 0;
 

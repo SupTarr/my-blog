@@ -2,16 +2,10 @@ import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
 
-type PropsType = {
-  width: number;
-  search: string;
-  setSearch(newSearch: string): void;
-};
-
-const Layout = ({ width, search, setSearch }: PropsType) => {
+const Layout = () => {
   return (
     <div className="app min-h-screen">
-      <Header width={width} search={search} setSearch={setSearch} />
+      <Header />
       <Outlet />
       <Footer />
     </div>

@@ -1,19 +1,46 @@
-import { useEffect, useState } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { createContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-import { Post } from "./types/Post";
-import Api from "./api/posts";
-import useWindowSize from "./hooks/useWindowSize";
-import useAxiosFetch from "./hooks/useAxiosFetch";
-import { DataProvider } from "./context/DataContext";
-import Layout from "./components/Layout";
-import PageHome from "./pages/PageHome";
-import PageNewPost from "./pages/PageNewPost";
-import PagePost from "./pages/PagePost";
-import PageAbout from "./pages/PageAbout";
-import Page404 from "./pages/Page404";
+import { Post } from "../types/Post";
+import Api from "../api/posts";
+import useWindowSize from "../hooks/useWindowSize";
+import useAxiosFetch from "../hooks/useAxiosFetch";
 
-function App() {
+type ContainerProps = {
+  children: JSX.Element;
+};
+
+type ContextType = {
+  width: number;
+  search: string;
+  setSearch(newSearch: string): void;
+  searchResults: Post[];
+  fetchError: string;
+  isLoading: boolean;
+  postTitle: string;
+  postBody: string;
+  setPostTitle(postTitle: string): void;
+  setPostBody(postBody: string): void;
+  handleSubmit(id?: number): void;
+};
+
+const ContextState: ContextType = {
+  width: 0,
+  search: "",
+  setSearch: () => {},
+  searchResults: [],
+  fetchError: "",
+  isLoading: false,
+  postTitle: "",
+  postBody: "",
+  setPostTitle: () => {},
+  setPostBody: () => {},
+  handleSubmit: () => {},
+};
+
+const DataContext = createContext(ContextState);
+
+export const DataProvider = ({ children }: ContainerProps) => {
   const navigate = useNavigate();
   const { width } = useWindowSize();
   const { data, isLoading, fetchError } = useAxiosFetch(
@@ -76,23 +103,24 @@ function App() {
   };
 
   return (
-    <DataProvider>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<PageHome />} />
-          <Route path="/post">
-            <Route index element={<PageNewPost />} />
-            <Route
-              path=":id"
-              element={<PagePost posts={posts} handleDelete={handleDelete} />}
-            />
-          </Route>
-          <Route path="/about" element={<PageAbout />} />
-          <Route path="*" Component={Page404} />
-        </Route>
-      </Routes>
-    </DataProvider>
+    <DataContext.Provider
+      value={{
+        width,
+        search,
+        setSearch,
+        searchResults,
+        fetchError,
+        isLoading,
+        postTitle,
+        postBody,
+        setPostTitle,
+        setPostBody,
+        handleSubmit,
+      }}
+    >
+      {children}
+    </DataContext.Provider>
   );
-}
+};
 
-export default App;
+export default DataContext;

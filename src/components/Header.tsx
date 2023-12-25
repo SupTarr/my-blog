@@ -1,14 +1,12 @@
 import { Link } from "react-router-dom";
 import { FaLaptop, FaTabletAlt, FaMobileAlt } from "react-icons/fa";
 import Menu from "./Menu";
+import { useContext } from "react";
+import DataContext from "../context/DataContext";
 
-type PropsType = {
-  width: number;
-  search: string;
-  setSearch(newSearch: string): void;
-};
+const Header = () => {
+  const { width, search, setSearch } = useContext(DataContext);
 
-const Header = ({ width, search, setSearch }: PropsType) => {
   return (
     <div className="navbar sticky top-0 z-10 justify-between bg-base-300">
       <div className="navbar-start w-auto md:w-[50%]">
