@@ -22,6 +22,7 @@ type ContextType = {
   setPostTitle(postTitle: string): void;
   setPostBody(postBody: string): void;
   handleSubmit(id?: number): void;
+  handleDelete(id?: number): void;
 };
 
 const ContextState: ContextType = {
@@ -36,6 +37,7 @@ const ContextState: ContextType = {
   setPostTitle: () => {},
   setPostBody: () => {},
   handleSubmit: () => {},
+  handleDelete: () => {},
 };
 
 const DataContext = createContext(ContextState);
@@ -116,6 +118,7 @@ export const DataProvider = ({ children }: ContainerProps) => {
         setPostTitle,
         setPostBody,
         handleSubmit,
+        handleDelete,
       }}
     >
       {children}

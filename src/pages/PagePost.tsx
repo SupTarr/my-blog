@@ -1,16 +1,33 @@
+import { useEffect, useState, useContext } from "react";
 import { Post } from "../types/Post";
+import Api from "../api/posts";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { format } from "date-fns";
 import { Alert, AlertType } from "../components/Alert";
+import DataContext from "../context/DataContext";
 
-type PropsType = {
-  posts: Post[];
-  handleDelete(id: number): void;
-};
-
-const PagePost = ({ posts, handleDelete }: PropsType) => {
+const PagePost = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const post = posts.find((post) => post.id.toString() === id);
+  const { handleDelete } = useContext(DataContext);
+  const [post, setPost] = useState<Post>({
+    id: 0,
+    title: "",
+    datetime: format(new Date(), "MMMM dd, yyyy pp"),
+    body: "",
+  });
+
+  useEffect(() => {
+    id &&
+      (async () => {
+        try {
+          const response = await Api.get(`/posts/${id}`);
+          setPost(response.data);
+        } catch (err) {
+          console.log(`>> error: ${(err as Error).message}`);
+        }
+      })();
+  }, []);
 
   return (
     <main className="mx-auto flex w-full flex-col flex-wrap gap-5 p-2 md:w-9/12 lg:w-7/12">

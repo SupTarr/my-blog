@@ -1,7 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { useSearchParams } from "react-router-dom";
 import Api from "../api/posts";
-import { useContext } from "react";
 import DataContext from "../context/DataContext";
 
 const PageNewPost = () => {

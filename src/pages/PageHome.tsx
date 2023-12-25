@@ -1,4 +1,3 @@
-import { Post as TPost } from "../types/Post";
 import Post from "../components/Post";
 import { Loading, Size } from "../components/Loading";
 import { Alert, AlertType } from "../components/Alert";
