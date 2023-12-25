@@ -9,7 +9,7 @@ import DataContext from "../context/DataContext";
 const PagePost = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  
+
   const { posts, setPosts } = useContext(DataContext);
   const [post, setPost] = useState<Post>({
     id: 0,
