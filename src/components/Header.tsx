@@ -2,10 +2,12 @@ import { Link } from "react-router-dom";
 import { FaLaptop, FaTabletAlt, FaMobileAlt } from "react-icons/fa";
 import Menu from "./Menu";
 import { useContext } from "react";
+import useWindowSize from "../hooks/useWindowSize";
 import DataContext from "../context/DataContext";
 
 const Header = () => {
-  const { width, search, setSearch } = useContext(DataContext);
+  const { width } = useWindowSize();
+  const { search, setSearch } = useContext(DataContext);
 
   return (
     <div className="navbar sticky top-0 z-10 justify-between bg-base-300">

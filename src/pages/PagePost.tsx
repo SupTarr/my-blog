@@ -7,15 +7,26 @@ import { Alert, AlertType } from "../components/Alert";
 import DataContext from "../context/DataContext";
 
 const PagePost = () => {
-  const { id } = useParams();
   const navigate = useNavigate();
-  const { handleDelete } = useContext(DataContext);
+  const { id } = useParams();
+  
+  const { posts, setPosts } = useContext(DataContext);
   const [post, setPost] = useState<Post>({
     id: 0,
     title: "",
     datetime: format(new Date(), "MMMM dd, yyyy pp"),
     body: "",
   });
+
+  const handleDelete = async (id: number) => {
+    try {
+      await Api.delete(`/posts/${id}`);
+      setPosts(posts.filter((post) => post.id != id));
+      navigate("/");
+    } catch (err) {
+      console.log(`>> error: ${(err as Error).message}`);
+    }
+  };
 
   useEffect(() => {
     id &&
