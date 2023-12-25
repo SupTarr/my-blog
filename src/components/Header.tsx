@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
+import { FaLaptop, FaTabletAlt, FaMobileAlt } from "react-icons/fa";
 import Menu from "./Menu";
 
 type PropsType = {
+  width: number;
   search: string;
   setSearch(newSearch: string): void;
 };
 
-const Header = ({ search, setSearch }: PropsType) => {
+const Header = ({ width, search, setSearch }: PropsType) => {
   return (
     <div className="navbar sticky top-0 z-10 justify-between bg-base-300">
       <div className="navbar-start w-auto md:w-[50%]">
@@ -16,6 +18,13 @@ const Header = ({ search, setSearch }: PropsType) => {
         <Link to="/" className="btn btn-ghost text-xl">
           My Blog
         </Link>
+        {width < 768 ? (
+          <FaMobileAlt />
+        ) : width < 992 ? (
+          <FaTabletAlt />
+        ) : (
+          <FaLaptop />
+        )}
       </div>
       <div className="navbar-end">
         <div className="form-control">

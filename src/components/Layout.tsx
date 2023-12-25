@@ -3,14 +3,15 @@ import Header from "./Header";
 import Footer from "./Footer";
 
 type PropsType = {
+  width: number;
   search: string;
   setSearch(newSearch: string): void;
 };
 
-const Layout = ({ search, setSearch }: PropsType) => {
+const Layout = ({ width, search, setSearch }: PropsType) => {
   return (
     <div className="app min-h-screen">
-      <Header search={search} setSearch={setSearch} />
+      <Header width={width} search={search} setSearch={setSearch} />
       <Outlet />
       <Footer />
     </div>
