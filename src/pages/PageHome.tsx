@@ -1,11 +1,20 @@
 import Post from "../components/Post";
 import { Loading, Size } from "../components/Loading";
 import { Alert, AlertType } from "../components/Alert";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import DataContext from "../context/DataContext";
 
 const PageHome = () => {
-  const { searchResults, isLoading, fetchError } = useContext(DataContext);
+  const { searchResults, isLoading, fetchError, setIsLoading } =
+    useContext(DataContext);
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  }, [setIsLoading]);
 
   return (
     <main className="mx-auto flex w-full flex-col flex-wrap gap-5 p-2 md:w-9/12 lg:w-7/12">

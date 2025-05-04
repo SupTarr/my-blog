@@ -1,9 +1,8 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, ReactNode } from "react";
 import { Post } from "../types/Post";
-import useAxiosFetch from "../hooks/useAxiosFetch";
 
 type ContainerProps = {
-  children: JSX.Element;
+  children: ReactNode;
 };
 
 type ContextType = {
@@ -12,8 +11,9 @@ type ContextType = {
   posts: Post[];
   setPosts(posts: Post[]): void;
   searchResults: Post[];
-  fetchError: string;
+  fetchError: string | null;
   isLoading: boolean;
+  setIsLoading(isLoading: boolean): void;
 };
 
 const ContextState: ContextType = {
@@ -22,24 +22,48 @@ const ContextState: ContextType = {
   posts: [],
   setPosts: () => {},
   searchResults: [],
-  fetchError: "",
+  fetchError: null,
   isLoading: false,
+  setIsLoading: () => {},
 };
 
 const DataContext = createContext(ContextState);
 
 export const DataProvider = ({ children }: ContainerProps) => {
-  const { data, isLoading, fetchError } = useAxiosFetch(
-    "http://localhost:3500/posts",
-  );
-
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPostsState] = useState<Post[]>([]);
   const [search, setSearch] = useState<string>("");
   const [searchResults, setSearchResults] = useState<Post[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   useEffect(() => {
-    setPosts(data);
-  }, [data]);
+    setIsLoading(true);
+    setFetchError(null);
+    try {
+      const storedPosts = localStorage.getItem("blogPosts");
+      const initialPosts = storedPosts ? JSON.parse(storedPosts) : [];
+      setTimeout(() => {
+        setPostsState(initialPosts);
+        setIsLoading(false);
+      }, 1000);
+    } catch (error) {
+      console.error("Failed to load posts from localStorage:", error);
+      setFetchError("Failed to load posts.");
+      setPostsState([]);
+      setIsLoading(false);
+    }
+  }, []);
+
+  const setPosts = (newPosts: Post[]) => {
+    try {
+      setPostsState(newPosts);
+      localStorage.setItem("blogPosts", JSON.stringify(newPosts));
+      setFetchError(null);
+    } catch (error) {
+      console.error("Failed to save posts to localStorage:", error);
+      setFetchError("Failed to save posts.");
+    }
+  };
 
   useEffect(() => {
     const filteredResults = posts.filter(
@@ -60,6 +84,7 @@ export const DataProvider = ({ children }: ContainerProps) => {
         searchResults,
         fetchError,
         isLoading,
+        setIsLoading,
       }}
     >
       {children}

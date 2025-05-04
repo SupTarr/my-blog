@@ -1,48 +1,52 @@
 import { useEffect, useState, useContext } from "react";
 import { Post } from "../types/Post";
-import Api from "../api/posts";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { format } from "date-fns";
 import { Alert, AlertType } from "../components/Alert";
 import DataContext from "../context/DataContext";
+import { Loading, Size } from "../components/Loading";
 
 const PagePost = () => {
+  const { isLoading, setIsLoading } = useContext(DataContext);
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id: idParam } = useParams();
+  const id = idParam ? Number(idParam) : 0;
 
   const { posts, setPosts } = useContext(DataContext);
-  const [post, setPost] = useState<Post>({
-    id: 0,
-    title: "",
-    datetime: format(new Date(), "MMMM dd, yyyy pp"),
-    body: "",
-  });
-
-  const handleDelete = async (id: number) => {
-    try {
-      await Api.delete(`/posts/${id}`);
-      setPosts(posts.filter((post) => post.id != id));
-      navigate("/");
-    } catch (err) {
-      console.log(`>> error: ${(err as Error).message}`);
-    }
-  };
+  const [post, setPost] = useState<Post | null>(null);
+  const [postNotFound, setPostNotFound] = useState<boolean>(false);
 
   useEffect(() => {
-    id &&
-      (async () => {
-        try {
-          const response = await Api.get(`/posts/${id}`);
-          setPost(response.data);
-        } catch (err) {
-          console.log(`>> error: ${(err as Error).message}`);
-        }
-      })();
-  }, []);
+    setIsLoading(true);
+    if (!id) {
+      setPost(null);
+      setPostNotFound(true);
+      return;
+    }
+
+    const foundPost = posts.find((p) => p.id === id);
+    if (!foundPost) {
+      setPost(null);
+      setPostNotFound(true);
+      return;
+    }
+
+    setTimeout(() => {
+      setPost(foundPost);
+      setPostNotFound(false);
+      setIsLoading(false);
+    }, 1000);
+  }, [id, posts, setIsLoading]);
+
+  const handleDelete = (postId: number) => {
+    const updatedPosts = posts.filter((p) => p.id !== postId);
+    setPosts(updatedPosts);
+    navigate("/");
+  };
 
   return (
     <main className="mx-auto flex w-full flex-col flex-wrap gap-5 p-2 md:w-9/12 lg:w-7/12">
-      {post ? (
+      {isLoading && <Loading size={Size.Large} />}
+      {post && !isLoading ? (
         <>
           <h1 className="mb-2 text-2xl font-semibold">{post.title}</h1>
           <p className="mb-5 text-xs">{post.datetime}</p>
@@ -60,13 +64,15 @@ const PagePost = () => {
             Delete Post
           </button>
         </>
-      ) : (
+      ) : postNotFound ? (
         <div className="mx-auto flex w-full max-w-screen-lg flex-col flex-wrap content-center">
           <Alert type={AlertType.Error} message={"Post Not Found"} />
           <Link className="link link-primary mt-5 text-center" to="/">
             Home
           </Link>
         </div>
+      ) : (
+        <p>Loading post...</p>
       )}
     </main>
   );
